@@ -26,7 +26,7 @@ export function expo(n: number): number {
 interface FxRateResponse {
   amount: number;
   base: string;
-  date: string;
+  date: Date;
   rates: Map<string, number>;
 }
 
@@ -39,20 +39,34 @@ interface FxRateResponse {
  */
 export function fxRate(ccy0: string, ccy1: string): Promise<number> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return new Promise(function (resolve, reject) {
-    axios.get<FxRateResponse>(`https://api.frankfurter.app/latest?from=${ccy0}&to=${ccy1}`).then(function (resp) {
-      return resolve(resp.data.rates.get(ccy1));
-    });
+  const req = axios.request<FxRateResponse>({
+    url: "https://api.frankfurter.app/latest",
+    method: "get",
+    params: {
+      from: ccy0,
+      to: ccy1,
+    },
   });
-}
 
+  return (
+    req
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .then((res) => {
+        return res.data.rates[ccy1];
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .catch((err) => {
+        return 0.0;
+      })
+  );
+}
 /**
  * Combinations
  * @customFunction
  * @param elems array of elements
  * @returns all combinations of elems
  */
-export function Combinations(elems: string[]): string[][] {
+export function combinations(elems: string[]): string[][] {
   return elems.flatMap((elem, idx) => elems.slice(idx + 1).map((el) => [elem, el]));
 }
 
