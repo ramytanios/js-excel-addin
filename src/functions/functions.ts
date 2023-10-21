@@ -1,5 +1,7 @@
 ﻿/* global clearInterval, console, CustomFunctions, setInterval */
 
+import axios from "axios";
+
 /**
  * Adds two numbers.
  * @customfunction
@@ -9,6 +11,49 @@
  */
 export function add(first: number, second: number): number {
   return first + second;
+}
+
+/**
+ * Exponential of a number
+ * @customfunction
+ * @param number Number
+ * @returns The exponential of a number
+ */
+export function expo(n: number): number {
+  return Math.exp(n);
+}
+
+interface FxRateResponse {
+  amount: number;
+  base: string;
+  date: string;
+  rates: Map<string, number>;
+}
+
+/**
+ * FxRate
+ * @customfunction
+ * @param string Currency ccy0
+ * @param string Currency ccy1
+ * @returns Fx rate between 2 currencies
+ */
+export function fxRate(ccy0: string, ccy1: string): Promise<number> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return new Promise(function (resolve, reject) {
+    axios.get<FxRateResponse>(`https://api.frankfurter.app/latest?from=${ccy0}&to=${ccy1}`).then(function (resp) {
+      return resolve(resp.data.rates.get(ccy1));
+    });
+  });
+}
+
+/**
+ * Combinations
+ * @customFunction
+ * @param elems array of elements
+ * @returns all combinations of elems
+ */
+export function Combinations(elems: string[]): string[][] {
+  return elems.flatMap((elem, idx) => elems.slice(idx + 1).map((el) => [elem, el]));
 }
 
 /**
