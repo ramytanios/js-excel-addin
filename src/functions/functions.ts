@@ -82,7 +82,7 @@ export async function randomActivity(nParticipants: number): Promise<string> {
 
     return data.activity;
   } catch (err) {
-    return err;
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Invalid request or service down");
   }
 }
 
