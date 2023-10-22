@@ -6,49 +6,62 @@ import axios from "axios";
  * Combinations
  * @customFunction
  * @param {string[][]} elems Array of elements
- * @returns all combinations of elems
+ * @returns {string[][]} all combinations of elems
  */
 export function combinations(elems: string[][]): string[][] {
-  const elemz = elems[0];
-  return elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
+  const elemz = elems.map((row) => row[0]);
+  let combsOrError: string[][];
+  try {
+    elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
+  } catch {
+    Array(Array("Unable to compute combinations!"));
+  }
+  return combsOrError;
 }
 
 interface FxRateResponse {
   amount: number;
   base: string;
   date: Date;
-  rates: Map<string, number>;
+  rates: Object;
 }
 
 /**
  * FxRate
  * @customfunction
- * @param string Currency ccy0
- * @param string Currency ccy1
- * @returns number Fx rate between 2 currencies
+ * @param {string} ccy0 Currency
+ * @param {string} ccy1 Currency
+ * @returns {Promise<number | string>} Fx rate between 2 currencies
  */
-export function fxRate(ccy0: string, ccy1: string): Promise<number> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const req = axios.request<FxRateResponse>({
+export async function fxRate(ccy0: string, ccy1: string): Promise<number | string> {
+  const { data } = await axios.request<FxRateResponse>({
     url: "https://api.frankfurter.app/latest",
     method: "get",
+    headers: {
+      Accept: "application/json",
+    },
     params: {
       from: ccy0,
       to: ccy1,
     },
   });
 
-  return (
-    req
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .then((res) => {
-        return res.data.rates[ccy1];
-      })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .catch((err) => {
-        return 0.0;
-      })
-  );
+  try {
+    return data.rates[ccy1];
+  } catch (err) {
+    return err;
+  }
+}
+
+/**
+ * Sleep for some time and log
+ * @customFunction
+ * @param {string} msg Message to log
+ * @returns {string} Logged message
+ */
+export async function sleepAndLog(msg: string): Promise<string> {
+  await new Promise((f) => this.setTimeout(f, 1500));
+  return msg;
 }
 
 /**
