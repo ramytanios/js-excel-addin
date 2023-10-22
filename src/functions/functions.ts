@@ -57,7 +57,7 @@ export async function fxRate(ccy0: string, ccy1: string): Promise<number | strin
  * Sleep for some time and log
  * @customFunction
  * @param {string} msg Message to log
- * @returns {string} Logged message
+ * @returns {Promise<string>} Logged message
  */
 export async function sleepAndLog(msg: string): Promise<string> {
   await new Promise((f) => this.setTimeout(f, 1500));
