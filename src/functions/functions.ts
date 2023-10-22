@@ -10,13 +10,11 @@ import axios from "axios";
  */
 export function combinations(elems: string[][]): string[][] {
   const elemz = elems.map((row) => row[0]);
-  let combsOrError: string[][];
   try {
-    elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
+    return elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
   } catch {
-    Array(Array("Unable to compute combinations!"));
+    return Array(Array("Unable to compute combinations!"));
   }
-  return combsOrError;
 }
 
 interface FxRateResponse {
@@ -60,8 +58,13 @@ export async function fxRate(ccy0: string, ccy1: string): Promise<number | strin
  * @returns {Promise<string>} Logged message
  */
 export async function sleepAndLog(msg: string): Promise<string> {
-  await new Promise((f) => this.setTimeout(f, 1500));
-  return msg;
+  try {
+    //FIX: 
+    await new Promise((f) => this.setTimeout(f, 1500));
+    return msg;
+  } catch (err) {
+    return `${err}`;
+  }
 }
 
 /**
