@@ -3,24 +3,14 @@
 import axios from "axios";
 
 /**
- * Adds two numbers.
- * @customfunction
- * @param first First number
- * @param second Second number
- * @returns The sum of the two numbers.
+ * Combinations
+ * @customFunction
+ * @param {string[][]} elems Array of elements
+ * @returns all combinations of elems
  */
-export function add(first: number, second: number): number {
-  return first + second;
-}
-
-/**
- * Exponential of a number
- * @customfunction
- * @param number Number
- * @returns The exponential of a number
- */
-export function expo(n: number): number {
-  return Math.exp(n);
+export function combinations(elems: string[][]): string[][] {
+  const elemz = elems[0];
+  return elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
 }
 
 interface FxRateResponse {
@@ -35,7 +25,7 @@ interface FxRateResponse {
  * @customfunction
  * @param string Currency ccy0
  * @param string Currency ccy1
- * @returns Fx rate between 2 currencies
+ * @returns number Fx rate between 2 currencies
  */
 export function fxRate(ccy0: string, ccy1: string): Promise<number> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,15 +49,6 @@ export function fxRate(ccy0: string, ccy1: string): Promise<number> {
         return 0.0;
       })
   );
-}
-/**
- * Combinations
- * @customFunction
- * @param elems array of elements
- * @returns all combinations of elems
- */
-export function combinations(elems: string[]): string[][] {
-  return elems.flatMap((elem, idx) => elems.slice(idx + 1).map((el) => [elem, el]));
 }
 
 /**
