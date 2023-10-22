@@ -9,8 +9,8 @@ import axios from "axios";
  * @returns {string[][]} all combinations of elems
  */
 export function combinations(elems: string[][]): string[][] {
-  const elemz = elems.map((row) => row[0]);
   try {
+    const elemz = elems.map((row) => row[0]);
     return elemz.flatMap((elem, idx) => elemz.slice(idx + 1).map((el) => [elem, el]));
   } catch {
     return Array(Array("Unable to compute combinations!"));
@@ -32,38 +32,57 @@ interface FxRateResponse {
  * @returns {Promise<number | string>} Fx rate between 2 currencies
  */
 export async function fxRate(ccy0: string, ccy1: string): Promise<number | string> {
-  const { data } = await axios.request<FxRateResponse>({
-    url: "https://api.frankfurter.app/latest",
-    method: "get",
-    headers: {
-      Accept: "application/json",
-    },
-    params: {
-      from: ccy0,
-      to: ccy1,
-    },
-  });
-
   try {
+    const { data } = await axios.request<FxRateResponse>({
+      url: "https://api.frankfurter.app/latest",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+      params: {
+        from: ccy0,
+        to: ccy1,
+      },
+    });
+
     return data.rates[ccy1];
   } catch (err) {
     return err;
   }
 }
 
+interface RandomActivity {
+  type: string;
+  activity: string;
+  participants: number;
+  price: number;
+  link: string;
+  key: string;
+  accessibility: number;
+}
+
 /**
- * Sleep for some time and log
+ * RandomActivity
  * @customFunction
- * @param {string} msg Message to log
- * @returns {Promise<string>} Logged message
+ * @param {number} nParticipants Number of participants
+ * @returns {Promise<string>} Random activity
  */
-export async function sleepAndLog(msg: string): Promise<string> {
+export async function randomActivity(nParticipants: number): Promise<string> {
   try {
-    //FIX: 
-    await new Promise((f) => this.setTimeout(f, 1500));
-    return msg;
+    const { data } = await axios.request<RandomActivity>({
+      url: "https://www.boredapi.com/api/activity",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+      params: {
+        participants: nParticipants,
+      },
+    });
+
+    return data.activity;
   } catch (err) {
-    return `${err}`;
+    return err;
   }
 }
 
