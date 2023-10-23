@@ -29,9 +29,9 @@ interface FxRateResponse {
  * @customfunction
  * @param {string} ccy0 Currency
  * @param {string} ccy1 Currency
- * @returns {Promise<number | string>} Fx rate between 2 currencies
+ * @returns {Promise<number>} Fx rate between 2 currencies
  */
-export async function fxRate(ccy0: string, ccy1: string): Promise<number | string> {
+export async function fxRate(ccy0: string, ccy1: string): Promise<number> {
   try {
     const { data } = await axios.request<FxRateResponse>({
       url: "https://api.frankfurter.app/latest",
@@ -47,7 +47,7 @@ export async function fxRate(ccy0: string, ccy1: string): Promise<number | strin
 
     return data.rates[ccy1];
   } catch (err) {
-    return err;
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, `Invalid request or service down: ${err}`);
   }
 }
 
@@ -82,7 +82,7 @@ export async function randomActivity(nParticipants: number): Promise<string> {
 
     return data.activity;
   } catch (err) {
-    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Invalid request or service down");
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, `Invalid request or service down: ${err}`);
   }
 }
 
